@@ -19,8 +19,6 @@ namespace YourPhotos\Classes;
 /** Single instance of a customer picture */
 class CustomerPicture {
 
-	}
-
 	/**
 	 * Deletes the picture
 	 *
