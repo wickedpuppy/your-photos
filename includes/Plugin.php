@@ -66,7 +66,6 @@ class Plugin extends Framework\SV_WC_Plugin
 	 * @return null
 	 */
 	public function init() {
-		$psr4Test = new psr4Test();
 	}
 
 
