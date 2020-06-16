@@ -21,6 +21,7 @@ namespace YourPhotos;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_7_1 as Framework;
 use YourPhotos\Controllers\PictureBookController;
+use YourPhotos\Classes\Administration;
 use YourPhotos\Classes\Api;
 
 
@@ -44,6 +45,8 @@ class Plugin extends Framework\SV_WC_Plugin {
 	/** @var CustomerPictureBook */
 	protected $picture_book;
 
+	/** @var Administration */
+	protected $admin;
 
 	/** @var Api */
 	protected $api;
@@ -55,6 +58,8 @@ class Plugin extends Framework\SV_WC_Plugin {
 	 */
 	public function __construct()
 	{
+		$picture_book_controller = new PictureBookController();
+		$this->admin        = current_user_can( 'manage_woocommerce' ) ? new Administration() : null;
 		$this->api          = new Api();
 
 		parent::__construct(
@@ -66,7 +71,6 @@ class Plugin extends Framework\SV_WC_Plugin {
 		);
 		add_action( 'init', array( $this, 'init' ) );
 
-		$picture_book_controller = new PictureBookController();
 	}
 
 	/**
