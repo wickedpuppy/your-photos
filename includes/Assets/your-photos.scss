@@ -1,0 +1,125 @@
+.your_photos {
+	display: flex;
+
+	h3 {
+		text-align: right;
+		font-size: 1.2em;
+		width: 100%;
+		border: 0;
+		margin: 0;
+		padding: 0;
+	}
+	.featured {
+		margin: 0 12px;
+		width: 30%;
+		h3 {
+			text-align: right;
+		}
+
+		img {
+			width: 100%;
+			height: auto;
+		}
+
+		form {
+			margin-top: 48px;
+			text-align: right;
+			h3 {
+				text-align: left;
+			}
+
+			.radio-container {
+				text-align: left;
+			}
+
+			input[type="file"] {
+				visibility: hidden;
+			}
+
+			label[for="pic"] {
+				display: inline-block;
+				font-size: 24px;
+				padding: 6px;
+				width: 50%;
+				border: solid 2px black;
+			}
+		}
+	}
+
+	.photo-roll {
+		width: 70%;
+		height: min-content;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: left;
+		align-items: flex-start;
+		margin: 0 6px;
+		h3 {
+			text-align: left;
+			margin: 0 6px;
+		}
+
+		.photo {
+			margin: 0 6px 12px;
+			img {
+				height: auto;
+				min-width: 90px;
+				width: 100%;
+				max-width: 210px;
+			}
+		}
+	}
+
+	.caption-bar {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		background-color: #000000;
+		color: white;
+		text-align: right;
+		padding: 1px;
+
+		.categories {
+			align-self: flex-start;
+			text-align: left;
+			line-height: normal;
+
+			.title {
+				font-size: 16px;
+			}
+		}
+
+		.edit {
+			align-self: flex-end;
+
+			a {
+				color: #888;
+				text-decoration: none;
+
+				&:hover {
+					color: white;
+				}
+			}
+
+			.dashicons {
+				font-size: 16px;
+				border: 0;
+			}
+		}
+	}
+	.make-profile {
+		border: solid 2px black;
+		a {
+			display: block;
+			width: 100%;
+			text-align: center;
+			color: black;
+			text-decoration: none;
+
+			&:hover {
+				background-color: black;
+				color: white;
+			}
+		}
+	}
+}

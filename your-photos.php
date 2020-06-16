@@ -84,8 +84,8 @@ class YourPhotos {
 		register_activation_hook(
 			__FILE__,
 			function() {
-				$this->activate();
 				$this->activation_check();
+				$this->activate();
 			}
 		);
 
@@ -108,7 +108,8 @@ class YourPhotos {
 	 * @since 1.0.0
 	 */
 	public function activate() {
-		$a = new Psr4Test();
+		add_rewrite_endpoint( 'your-photos', EP_ROOT | EP_PAGES );
+		flush_rewrite_rules();
 	}
 
 	/**
