@@ -21,6 +21,8 @@ namespace YourPhotos;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_7_1 as Framework;
 use YourPhotos\Controllers\PictureBookController;
+use YourPhotos\Classes\Api;
+
 
 defined('ABSPATH') || exit;
 
@@ -39,6 +41,13 @@ class Plugin extends Framework\SV_WC_Plugin {
 	/** Plugin id */
 	const PLUGIN_ID = 'your-photos';
 
+	/** @var CustomerPictureBook */
+	protected $picture_book;
+
+
+	/** @var Api */
+	protected $api;
+
 	/**
 	 * Constructs the plugin.
 	 *
@@ -46,6 +55,7 @@ class Plugin extends Framework\SV_WC_Plugin {
 	 */
 	public function __construct()
 	{
+		$this->api          = new Api();
 
 		parent::__construct(
 			self::PLUGIN_ID,
@@ -74,7 +84,38 @@ class Plugin extends Framework\SV_WC_Plugin {
 		// for picture book
 
 		// for REST api
+		add_action(
+			'rest_api_init', function () {
+				register_rest_route(
+					'your-photos-api/v1',
+					'pictures/(?P<id>\d+)',
+					array(
+						'methods'  => 'GET',
+
+						'args' => array(
+							'id' => array(
+								'validate_callback' => function( $param, $request, $key ) {
+									return is_numeric( $param );
+								},
+							),
+						),
+						'callback' => array( $this->api, 'read' ),
+						'permission_callback' => array( $this->api, 'check_permissions' ),
+					)
+				);
+				register_rest_route(
+					'your-photos-api/v1',
+					'/pictures',
+					array(
+						'methods'  => 'GET',
+						'callback' => array( $this->api, 'read' ),
+						'permission_callback' => array( $this->api, 'check_permissions' ),
+						)
+				);
+			}
+		);
 	}
+
 
 
 

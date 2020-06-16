@@ -22,6 +22,44 @@ namespace YourPhotos\Classes;
 class Api {
 
 	/** GET */
-	public function read( $id ) {
+	public function read( $data ) {
+		global $wpdb;
+
+		$id = $data->get_param( 'id' );
+
+		if ( is_null( $data->get_param( 'id' ) ) ) {
+			$pictures_raw = $wpdb->get_results(
+				"SELECT umeta_id, meta_value
+				FROM {$wpdb->prefix}usermeta
+				where meta_key = 'your-photos-image'"
+			);
+
+			$pictures = array();
+			foreach ( $pictures_raw as $p ) {
+				$p->meta_value = unserialize( $p->meta_value );
+				array_push( $pictures, $this->process( $p ) );
+			}
+
+			return new \WP_REST_Response( $pictures,200 );
+		}
+
+		$picture = get_metadata_by_mid( 'user', $id );
+
+		return new \WP_REST_Response( $this->process( $picture ), 200 );
+	}
+
+	private function process( $picture ) {
+		return array(
+			'id'       => $picture->umeta_id,
+			'name'     => $picture->meta_value['name'],
+			'filetype' => $picture->meta_value['type'],
+			'user'     => $picture->meta_value['user']->ID,
+			'url'      => $picture->meta_value['url'],
+		);
+	}
+
+	public function check_permissions () {
+		return true;
+		return is_user_logged_in();
 	}
 }
