@@ -42,8 +42,8 @@ class Plugin extends Framework\SV_WC_Plugin {
 	/** Plugin id */
 	const PLUGIN_ID = 'your-photos';
 
-	/** @var CustomerPictureBook */
-	protected $picture_book;
+	/** @var PictureBookController */
+	protected $picture_book_controller;
 
 	/** @var Administration */
 	protected $admin;
@@ -58,10 +58,6 @@ class Plugin extends Framework\SV_WC_Plugin {
 	 */
 	public function __construct()
 	{
-		$picture_book_controller = new PictureBookController();
-		$this->admin        = current_user_can( 'manage_woocommerce' ) ? new Administration() : null;
-		$this->api          = new Api();
-
 		parent::__construct(
 			self::PLUGIN_ID,
 			self::VERSION,
@@ -81,7 +77,9 @@ class Plugin extends Framework\SV_WC_Plugin {
 	 * @return null
 	 */
 	public function init() {
-
+		$this->picture_book_controller = new PictureBookController();
+		$this->admin                   = current_user_can( 'manage_woocommerce' ) ? new Administration() : null;
+		$this->api                     = new Api();
 
 		// for administration
 
