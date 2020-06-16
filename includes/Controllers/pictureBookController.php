@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 class PictureBookController {
 
 	/** @var CustomerPictureBook */
-	protected $picture_book;
+	private $picture_book;
 
 	/**
 	 * Initializes the plugin
