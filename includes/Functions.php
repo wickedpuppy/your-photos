@@ -24,3 +24,24 @@ function wc_framework_plugin() {
 
 	return Plugin::instance();
 }
+
+function your_photos_get_account_action_permalink( $action, $id ) {
+
+	if ( in_array( $action, array( 'set-profile', 'edit-photo', 'delete-photo' ), true ) ) {
+		$permalink = get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
+		if ( '' !== get_option( 'permalink_structure' ) ) {
+			// using pretty permalinks, append to url
+			return user_trailingslashit( $permalink . 'your-photos/' . $action . '/' . $id );
+
+		} else {
+
+			return add_query_arg(
+				array(
+					'your-photos' => 1,
+					$action       => $id,
+				),
+				$permalink
+			);
+		}
+	}
+}

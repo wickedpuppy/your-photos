@@ -56,6 +56,14 @@ class CustomerPictureBook {
 	 */
 	public function __construct( $user_id = null ) {
 
+		$user_id = is_null( $user_id ) ? get_current_user_id() : $user_id;
+		$pictures = get_user_meta( $user_id, 'your-photos-picture-book', true );
+
+		$this->pictures = isset( $pictures['pictures'] ) ? $pictures['pictures'] : array();
+		$this->featured = isset( $pictures['featured'] ) ? $pictures['featured'] : null;
+		$this->upload   = new ImgHandler();
+		$this->user     = get_user_by( 'id', $user_id );
+
 	}
 
 	/**
@@ -66,6 +74,12 @@ class CustomerPictureBook {
 	 * @since 1.0
 	 */
 	public function set_featured( $id ) {
+		if ( ! is_null( $this->featured ) ) {
+			$this->pictures[] = $this->featured;
+		}
+
+		$this->featured = $this->pop_picture( $id );
+		$this->save();
 	}
 
 	/**
@@ -74,6 +88,7 @@ class CustomerPictureBook {
 	 * @since 1.0
 	 */
 	public function get_featured() {
+		return $this->featured;
 	}
 
 	/**
@@ -82,6 +97,16 @@ class CustomerPictureBook {
 	 * @since 1.0
 	 */
 	public function get_pictures() {
+		return $this->pictures;
+	}
+
+	public function pop_picture ( $needle ) {
+		foreach ( $this->pictures as $key => $pic ) {
+			if ( $needle === $pic->id ) {
+				$newFeatured = array_splice( $this->pictures, $key, 1 );
+				return $newFeatured[0];
+			}
+		}
 	}
 
 	/**
@@ -94,6 +119,17 @@ class CustomerPictureBook {
 	 * @since 1.0
 	 */
 	public function add( $pic, $category ) {
+		$pic = $this->upload->uploadImg( $pic );
+		$pic['category'] = $category;
+		$pic['id'] = \uniqid();
+		$pic['user'] = $this->user;
+
+		if ( $pic['valid'] ) {
+			$newPic = new CustomerPicture( $pic, $this->user->ID );
+			$this->pictures[] = $newPic;
+			$this->set_featured( $newPic->id );
+			$this->save();
+		}
 	}
 
 	/**
@@ -102,5 +138,28 @@ class CustomerPictureBook {
 	 * @since 1.0
 	 */
 	public function delete ( $id ) {
+		if( !is_null($this->featured) && $this->featured->id === $id ) {
+			$this->featured->delete();
+			$this->featured = null;
+		} else {
+			$this->pop_picture( $id )->delete();
+		}
+		$this->save();
+	}
+
+	/**
+	 * Saves the picture book
+	 *
+	 * @since 1.0
+	 */
+	private function save() {
+		update_user_meta(
+			$this->user->ID,
+			'your-photos-picture-book',
+			array(
+				'pictures' => $this->pictures,
+				'featured' => $this->featured,
+			)
+		);
 	}
 }

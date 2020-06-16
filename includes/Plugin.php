@@ -20,15 +20,14 @@
 namespace YourPhotos;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_7_1 as Framework;
-use YourPhotos\Psr4Test;
+use YourPhotos\Controllers\PictureBookController;
 
 defined('ABSPATH') || exit;
 
 /**
  * @since 1.0.0
  */
-class Plugin extends Framework\SV_WC_Plugin
-{
+class Plugin extends Framework\SV_WC_Plugin {
 
 
 	/** @var Plugin */
@@ -56,6 +55,8 @@ class Plugin extends Framework\SV_WC_Plugin
 			)
 		);
 		add_action( 'init', array( $this, 'init' ) );
+
+		$picture_book_controller = new PictureBookController();
 	}
 
 	/**
@@ -67,97 +68,15 @@ class Plugin extends Framework\SV_WC_Plugin
 	 */
 	public function init() {
 
+
 		// for administration
 
 		// for picture book
-		add_action( 'woocommerce_account_menu_items', array( $this, 'add_your_photos_menu_item' ) );
-		add_action( 'woocommerce_account_your-photos_endpoint', array( $this, 'your_photos_page' ) );
-		add_filter( 'query_vars', array( $this, 'your_photos_query_vars' ), 0 );
-		add_filter( 'the_title', array( $this, 'your_photos_endpoint_title' ) );
-		add_action('wp_enqueue_scripts', function () {
-			wp_enqueue_style(
-				'your-photos',
-				plugin_dir_url( __FILE__ ) . '/Assets/your-photos.css',
-				array(),
-				'1.0',
-				'all'
-			);
-		});
 
 		// for REST api
 	}
 
-	public function your_photos_endpoint_title( $title )
-	{
-		global $wp_query;
 
-		// New page title.
-		if (
-
-		isset( $wp_query->query_vars[ 'your-photos' ] )
-		&&
-		! is_admin()
-		&&
-		is_main_query()
-		&&
-		in_the_loop()
-		&&
-		is_account_page()
-		) {
-
-			$title = __( 'Your photos', 'your-photos' );
-			remove_filter( 'the_title', 'your_photos_endpoint_title' );
-		}
-
-		return $title;
-	}
-
-	public function your_photos_query_vars( $vars )
-	{
-		$vars['your-photos'] = 'your-photos';
-		return $vars;
-	}
-
-	/**
-	 * Adds a link to the photos page in the user account page menu
-	 *
-	 * @since 1.0
-	 *
-	 * @return null
-	 */
-
-	public function add_your_photos_menu_item( $items )
-	{
-		$first_item = array_shift( $items );
-		$items      = array_merge(
-			array( 'your-photos' => __( 'Your photos', 'your-photos' ) ),
-			$items
-		);
-		array_unshift( $items, $first_item );
-
-		return $items;
-	}
-
-	/**
-	 * Displays the "your photos" dashboard to the end user
-	 *
-	 * @since 1.0
-	 */
-	public function your_photos_page( $value )
-	{
-		global $wp_query;
-
-		wc_get_template(
-			'your-photos.php',
-			array(
-				'featured'   => 'TODO',
-				'images'     => [],
-				'categories' => [],
-			),
-			'',
-			plugin_dir_path( __FILE__ ) . '/Template/'
-		);
-	}
 
 	/**
 	 * Gets the full path and filename of the plugin file.

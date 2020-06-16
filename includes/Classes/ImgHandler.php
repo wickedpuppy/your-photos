@@ -21,11 +21,39 @@ namespace YourPhotos\Classes;
  */
 class ImgHandler {
 
+	private $uploadDir;
+
+	public function __construct() {
+		$this->uploadDir =  wp_upload_dir();
+	}
+
+
 	public function uploadImg( $img ) {
+		if (
+			in_array( $img['type'], array ('image/gif', 'image/jpeg', 'image/png' ))
+			&&
+			( $img['size'] <= get_option( 'your_photos_max_upload_size' ) )
+		) {
+
+			$imgName = $this->rename( $img );
+			$path = $this->uploadDir['path'] . '/' . $imgName;
+
+			if ( move_uploaded_file($img['tmp_name'], $path) ) {
+				return array(
+					'valid' => true,
+					'path'  => str_replace( '\\', '/', $path ),
+					'name'  => $imgName,
+					'type'  => $img['type'],
+					'url'   => $this->uploadDir['url'] . '/' . $imgName,
+				);
+			}
+		}
+
+		return array( 'valid' => false );
 	}
 
 	/** renames the image with an unique and sanitized name */
 	private function rename( $img ) {
-		return time();
+		return  time() . wp_unslash( $img['name'] );;
 	}
 }

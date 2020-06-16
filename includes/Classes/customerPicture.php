@@ -16,8 +16,40 @@
 
 namespace YourPhotos\Classes;
 
-/** Single instance of a customer picture */
+/** single instance of a customer picture */
 class CustomerPicture {
+
+	public $previous_value; // For future editing features
+	public $category;
+	public $data;
+	public $path;
+	public $name;
+	public $type;
+	public $user;
+	public $url;
+	public $id;
+
+	public function __construct( $data, $user_id ) {
+		$key = 'your-photos-image';
+
+		update_user_meta(
+			$user_id,
+			$key,
+			$data,
+			true
+		);
+
+		$this->previous_value = $data;
+		$this->category       = $data['category'];
+		$this->data           = $data;
+		$this->path           = $data['path'];
+		$this->name           = $data['name'];
+		$this->type           = $data['type'];
+		$this->user           = $data['user'];
+		$this->url            = $data['url'];
+		$this->id             = $data['id'];
+
+	}
 
 	/**
 	 * Deletes the picture
@@ -26,8 +58,10 @@ class CustomerPicture {
 	 */
 	public function delete() {
 
-		// deleting files or not?
+		delete_user_meta( $this->user->ID, 'your-photos-image', $this->data );
 
+		// if we want to delete the file, too
+		// unlink( $this->path );
 	}
 
 	/**

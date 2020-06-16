@@ -108,7 +108,14 @@ class YourPhotos {
 	 * @since 1.0.0
 	 */
 	public function activate() {
+
+		add_option( 'your_photos_max_number', 12 );
+		add_option( 'your_photos_max_upload_size', 500000 );
+
 		add_rewrite_endpoint( 'your-photos', EP_ROOT | EP_PAGES );
+		add_rewrite_rule( '(.?.+?)/your-photos/set-profile(/(.*))?/?$',	'index.php?pagename=$matches[1]&your-photos=1&set-profile=$matches[3]', 'top' );
+		add_rewrite_rule( '(.?.+?)/your-photos/delete-photo(/(.*))?/?$', 'index.php?pagename=$matches[1]&your-photos=1&delete-photo=$matches[3]', 'top' );
+		add_rewrite_rule( '(.?.+?)/your-photos/edit-photo(/(.*))?/?$', 'index.php?pagename=$matches[1]&your-photos=1&edit-photo=$matches[3]', 'top' );
 		flush_rewrite_rules();
 	}
 
