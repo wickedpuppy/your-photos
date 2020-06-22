@@ -32,11 +32,10 @@ class CustomerPicture {
 	public function __construct( $data, $user_id ) {
 		$key = 'your-photos-image';
 
-		update_user_meta(
+		add_user_meta(
 			$user_id,
 			$key,
-			$data,
-			true
+			$data
 		);
 
 		$this->previous_value = $data;
