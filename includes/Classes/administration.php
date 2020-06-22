@@ -172,12 +172,12 @@ class Administration {
 		$output = '';
 
 		$picture_book = new CustomerPictureBook( $user->ID );
+		$output      = '<h2>User photos</h2>';
+		$output     .= '<h3>Featured Photo</h3>';
 		if (! empty( $picture_book->get_featured() )) {
-			$output      = '<h2>User photos</h2>';
-			$output     .= '<h3>Featured Photo</h3>';
 			$output     .= "<img src='" . $picture_book->get_featured()->url . "' style='height: 420px; max-height: 420px; width: auto;'>";
-			$output     .= '<h3>Other Photos</h3>';
 		}
+		$output     .= '<h3>Other Photos</h3>';
 
 		if (! empty( $picture_book->get_pictures() )) {
 			foreach ( $picture_book->get_pictures() as $picture ) {
