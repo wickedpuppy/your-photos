@@ -73,9 +73,6 @@ class PictureBookController {
 	 */
 		public function picture_on_order( $order ) {
 
-		var_dump($order);
-
-
 		if ( ! is_null( $this->picture_book->get_featured() ) ) {
 			$order->add_meta_data(
 				'user-picture',
