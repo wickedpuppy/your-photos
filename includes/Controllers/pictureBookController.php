@@ -55,7 +55,7 @@ class PictureBookController {
 			wp_enqueue_style( 'dashicons' );
 			wp_enqueue_style(
 				'your-photos',
-				plugin_dir_url( __FILE__ ) . '../Assets/your-photos.css',
+				plugin_dir_url( __FILE__ ) . '../Assets/your-photos.min.css',
 				array(),
 				'1.0',
 				'all'
