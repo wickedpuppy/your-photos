@@ -59,7 +59,6 @@ class Api {
 	}
 
 	public function check_permissions () {
-		return true;
 		return is_user_logged_in();
 	}
 }
